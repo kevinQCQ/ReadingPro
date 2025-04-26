@@ -1,4 +1,4 @@
-#千页流光 web-reading
+# 书舟全球web-reading
 
 This template should help get you started developing with Vue 3 in Vite.
 
@@ -29,7 +29,7 @@ npm run build
 ```
 =======
 
-项目名称:千页流光
+项目名称:书舟全球
 
 该项目的目标是开发出一个，资源齐全，阅读环境良好方便的在线阅读平台
 
