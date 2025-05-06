@@ -1,5 +1,4 @@
 <template>
-  <!-- <RouterLink :to="`/books/${props.book.id}`" class="book-card"> -->
   <RouterLink :to="{
     path:'/books/${props.book.id}',
     query: {
@@ -11,10 +10,7 @@
       content_url: props.book.content_url,
       publication_date: props.book.publication_date,
       publisher: props.book.publisher,
-
     }
-      
-    
   }" class="book-card">
     <div class="book-cover-container">
       <img

@@ -1,24 +1,30 @@
 <template>
   <headerBox></headerBox>
   <div class="book-read">
-    <div v-if="book">
+    <div>
       <div class="title-container">
-        <h2 class="title">{{ book.title }}</h2>
+        <h2 class="title">{{ real_title }}</h2>
       </div>
       <div class="book-content">
-        <p>{{ bookContent }}</p>
+        <p>你好，欢迎来到阅读页面！</p>
+        <div>
+          <div class="content-title">
+              <h2 class="chapter-title">第{{ my_chapter_id }}章</h2>
+          </div>
+          <div>
+              <h3 v-for="(content,index) in content_arr" :key="index">{{ content }}</h3>
+          </div>
+        </div>
       </div>
       <!-- 添加按钮组 -->
       <div class="button-group">
-        <RouterLink :to="getPrevChapterPath()" class="chapter-button">前一章</RouterLink>
-        <RouterLink :to="`/books/catalog/${bookId}`" class="chapter-button">返回目录</RouterLink>
-        <RouterLink :to="getNextChapterPath()" class="chapter-button">下一章</RouterLink>
+        <button v-if="my_chapter_id.value!=1" @click="getPrevChapterPath" class="chapter-button">前一章</button>
+        <!-- <button :to="`/books/catalog/${bookId}`" class="chapter-button">返回目录</button> -->
+        <button @click="getNextChapterPath()" class="chapter-button">下一章</button>
       </div>
       <RouterLink to="/books/1" class="back-button">返回书籍详情</RouterLink>
     </div>
-    <div v-else>
-      <p>加载中...</p>
-    </div>
+    
   </div>
   <InterestedBooks>
     <template #title>
@@ -29,40 +35,71 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute ,useRouter } from 'vue-router';
 import headerBox from '@/components/header-box.vue';
 import InterestedBooks from '@/components/InterestedBooks.vue';
+import axios from 'axios'
 
-const route = useRoute();
-const book = ref(null);
-const bookContent = ref('这里是书籍的内容...'); // 模拟书籍内容
+let route = useRoute();
 
-// 获取路由参数
-const bookId = route.params.id;
-onMounted(() => {
-  const para = route.params.para;
-  console.log(`加载书籍 ID: ${bookId}, 章节参数: ${para}`);
-  
-  // 在这里可以调用 API 获取书籍内容
-  // 模拟数据
-  book.value = {
-    id: bookId,
-    title: `书籍 ${bookId} 第${para}章`,
-  };
+const content_arr=ref([])
+const my_book_title=ref(route.query.book_title)
+const my_chapter_path=ref(route.query.chapter_path)
+const my_chapter_id=ref(route.query.chapter_id)   
+const real_title=ref(route.query.book_title)  
+
+onMounted(async() => {
+  console.log("get_Novel_Chapter", await get_Novel_Chapter());
+  real_title.value=await change_title();
+  content_arr.value=[...await get_Novel_Chapter()];
+  console.log("content_arr.value",content_arr.value);
 });
 
 // 获取前一章的路径
-const getPrevChapterPath = () => {
-  const currentPara = parseInt(route.params.para, 10);
-  const prevPara = currentPara > 1 ? currentPara - 1 : 1; // 防止章节小于1
-  return `/books/read/${route.params.id}/${prevPara}`;
+const getPrevChapterPath = async() => {
+  my_chapter_id.value=parseInt(my_chapter_id.value)-1;
+  content_arr.value=await get_Novel_Chapter();
+  console.log("content_arr.value",content_arr.value)
 };
 
+async function change_title()
+{
+    let cur="";
+    let flag=false;
+    for(let i=0;i<real_title.value.length;i++){
+        if(flag&&real_title[i]=='.')break;
+        if(flag)cur+=real_title.value[i];
+        if(real_title.value[i]==".")flag=!flag;
+    }
+    return cur;
+}
+
+async function get_Novel_Chapter()
+{
+    let cur_content=[];
+    const cur_params={
+        book_title:encodeURI(my_book_title.value),
+        chapter_path:encodeURI(my_chapter_path.value),
+        chapter_id:encodeURI("第"+my_chapter_id.value+"章")
+    };
+    
+    await axios.get('http://121.40.60.94:8088/library/novelChapter',{params:cur_params}).then(
+        (res) => {
+            for(let i=0;i<res.data.data.length;i++)
+            {
+                cur_content.push(res.data.data[i]);
+            }
+        }
+    ).catch((err)=>{console.log(err)});
+    console.log("cur_content",cur_content);
+    return cur_content;
+}
+
 // 获取下一章的路径
-const getNextChapterPath = () => {
-  const currentPara = parseInt(route.params.para, 10);
-  const nextPara = currentPara + 1; // 假设没有章节上限，实际项目中可能需要根据数据判断
-  return `/books/read/${route.params.id}/${nextPara}`;
+const getNextChapterPath = async () => {
+  my_chapter_id.value=parseInt(my_chapter_id.value)+1;
+  content_arr.value=await get_Novel_Chapter();
+  console.log("content_arr.value",content_arr.value)
 };
 </script>
 

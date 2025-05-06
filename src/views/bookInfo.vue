@@ -1,8 +1,16 @@
 <template>
   <headerBox></headerBox>
-  <BookDetail :author=author :type=type :content_url=content_url :cover=cover :publication_date=publication_date :publisher=publisher :title=title :detail=detail></BookDetail>
+  <BookDetail :author=this_author :type=this_type :content_url=this_content_url :cover=this_cover :publication_date=this_publication_date :publisher=this_publisher :title=this_title :detail=this_detail></BookDetail>
   <div class="bookActions">
-    <RouterLink :to="`/books/read/${bookId}/1`" class="actionButton">开始阅读</RouterLink>
+    <RouterLink :to="{
+      name: 'bookRead', 
+      query: {
+       id: 1,
+       book_title: title, 
+       chapter_path: content_url, 
+       chapter_id: '1'
+       }}" class="actionButton">开始阅读</RouterLink>
+    <p class="actionButton">加入书架</p>
     <button class="actionButton">添加到我的图书馆</button>
     <button class="actionButton">下载 EPUB，{{ bookFileSize }}</button>
     <RouterLink :to="`/books/catalog/${bookId}`" class="actionButton">目录</RouterLink>
@@ -20,21 +28,37 @@ import headerBox from '@/components/header-box.vue';
 import BookDetail from '@/components/BookDetail.vue';
 import InterestedBooks from '@/components/InterestedBooks.vue';
 import { useRoute } from 'vue-router';
+import { onMounted } from 'vue';
+import {ref} from 'vue';
 
 
 // 目标页面通过route.query获取
 const bookId = useRoute().params.id;  // 路径参数
 const { author,type,content_url,cover,publication_date,publisher,title,detail} = useRoute().query; // 查询参数
 
-function formatDate() {
-  console.log(author,type,content_url,cover,publication_date,publisher,title);
-}
 
-formatDate();
+const this_author=ref(author);
+const this_type=ref(type);
+const this_content_url=ref(content_url);
+const this_cover=ref(cover);
+const this_publication_date=ref(publication_date);
+const this_publisher=ref(publisher);
+const this_title=ref(title);
+const this_detail=ref(detail);
 
 
-
-
+onMounted(() => {
+  // console.log("bookInfor 挂载")
+  // console.log("bookinfo:",author,type,content_url,cover,publication_date,publisher,title,useRoute().query);
+  let change_title="";
+  let flag=false;
+  for(let i=0;i<title.length;i++){
+    if(flag&&title[i]=='.')break
+    if(flag)change_title+=title[i];
+    if(title[i]==".")flag=!flag;
+  }
+  this_title.value=change_title;
+});
 
 </script>
 

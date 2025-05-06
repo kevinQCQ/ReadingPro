@@ -7,8 +7,8 @@
     <div class="load-more-container" v-if="hasMoreBooks">
       <div class="load-more-button" @click="loadMoreBooks" :class="{ loading: loading }">
         <span v-if="!loading">加载更多</span>
-        <span v-else>加载中...</span>
-        <span class="arrow" v-if="!loading">↓</span>
+        <span v-else>加载�?...</span>
+        <span class="arrow" v-if="!loading">�?</span>
       </div>
     </div>
   </div>
@@ -21,14 +21,11 @@ import { useBooksStore } from '@/store/books';
 import axios from 'axios';
 
 
-// const booksStore = useBooksStore();
-// const books = computed(() => booksStore.books);
-
 const allBooks = ref([]);
 
 const displayedBooks = ref([]);
 const currentPage = ref(1);
-const booksPerPage = 3;
+const booksPerPage = 15;
 const loading = ref(false);
 
 const getBack=ref([]);
@@ -44,7 +41,7 @@ async function getList() {
   getBack.value.push(...res.data.data.content);
 }
 
-// 初始化显示前10本书
+// 初始化显示前20本书
 onMounted(async () => {
   
 
@@ -52,9 +49,7 @@ onMounted(async () => {
     await getList();
     // console.log(getBack._rawValue[0]);
 
-    
-
-    for(let i=0;i<5;i++)
+    for(let i=0;i<20;i++)
     {
         let cur=getBack._rawValue[i];
         // console.log(cur)
@@ -67,7 +62,7 @@ onMounted(async () => {
         let cur=getBack._rawValue[i];
         allBooks.value.unshift({id:i, author:cur.author, type:cur.type, content_url:cur.content_url, cover:cur.cover_image_url, publication_date:cur.publication_date, publisher:cur.publisher, title:cur.title, detail:cur.summary});
     }
-    console.log(allBooks.value);
+    // console.log(allBooks.value);
     
   
     // booksStore.fetchBooks();
