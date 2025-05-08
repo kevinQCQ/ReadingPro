@@ -1,17 +1,20 @@
 <template>
-  <RouterLink :to="{
-    path:'/books/${props.book.id}',
-    query: {
-      author: props.book.author,
-      title: props.book.title,
-      cover: props.book.cover,
-      detail: props.book.detail,
-      type: props.book.type,
-      content_url: props.book.content_url,
-      publication_date: props.book.publication_date,
-      publisher: props.book.publisher,
-    }
-  }" class="book-card">
+  <RouterLink
+    :to="{
+      path: `/books/${props.book.id}`,
+      query: {
+        author: props.book.author,
+        title: props.book.title,
+        cover: props.book.cover,
+        detail: props.book.detail,
+        type: props.book.type,
+        content_url: props.book.content_url,
+        publication_date: props.book.publication_date,
+        publisher: props.book.publisher,
+      },
+    }"
+    class="book-card"
+  >
     <div class="book-cover-container">
       <img
         v-if="loaded"
@@ -24,7 +27,7 @@
       </div>
     </div>
     <div class="book-info">
-      <h3 class="book-title">{{ props.book.title }}</h3>
+      <h3 class="book-title">{{ book_title }}</h3>
     </div>
   </RouterLink>
 </template>
@@ -40,10 +43,23 @@ const props = defineProps({
 });
 
 const loaded = ref(false);
+const book_title =ref(props.book.title);
+
+function change_title() {
+  let change_title = '';
+  let flag = false;
+  for (let i = 0; i < book_title.value.length; i++) {
+    if (flag && book_title.value[i] == '.') break;
+    if (flag) change_title += book_title.value[i];
+    if (book_title.value[i] == '.') flag = !flag;
+  }
+  return change_title;
+}
 
 onMounted(() => {
-  // console.log(props.book)
-  // 模拟图片加载
+
+  book_title.value = change_title();
+
   const img = new Image();
   img.src = props.book.cover;
   img.onload = () => {
@@ -61,6 +77,15 @@ onMounted(() => {
   text-decoration: none;
   color: inherit;
   transition: transform 0.3s;
+  display: inline-block; /* 让卡片并排显示 */
+  /* margin: 10px; */
+  width: 150px; /* 计算每个卡片的宽度 */
+  vertical-align: top; /* 对齐顶部 */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  text-align: center; /* 确保内容居中 */
 }
 
 .book-card:hover {
@@ -69,10 +94,10 @@ onMounted(() => {
 
 .book-cover-container {
   width: 100%;
-  height: 0;
-  padding-bottom: 140%; /* 保持封面的宽高比 */
+  height: 200px; /* 统一的高度 */
   position: relative;
   overflow: hidden;
+  border-radius: 4px;
 }
 
 .book-cover {
@@ -81,9 +106,8 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* 裁剪图片以适应容器 */
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .placeholder {
@@ -97,11 +121,11 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .book-info {
-  margin-top: 10px;
+  /* margin: 10px; */
+  /* padding: 10px; */
   text-align: center;
 }
 

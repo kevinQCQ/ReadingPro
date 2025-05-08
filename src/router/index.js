@@ -4,7 +4,8 @@ import home from '@/views/home.vue'
 import bookInfo from '@/views/bookInfo.vue'
 import bookRead from '@/views/bookRead.vue';
 import bookCatalog from '../views/bookCatalog.vue';
-import component from 'element-plus/es/components/tree-select/src/tree-select-option.mjs';
+import searchBook from '@/views/searchBook.vue';
+
 
 const routes = [
     {
@@ -29,6 +30,12 @@ const routes = [
         path: '/books/catalog/:id',
         name: 'bookCatalog',
         component: bookCatalog,
+        props: true,
+    },
+    {
+        path: '/searchBook',
+        name: 'searchBook',
+        component: searchBook,
         props: true,
     }
 ]

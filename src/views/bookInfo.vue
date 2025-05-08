@@ -10,10 +10,10 @@
        chapter_path: content_url, 
        chapter_id: '1'
        }}" class="actionButton">开始阅读</RouterLink>
-    <p class="actionButton">加入书架</p>
+    <button class="actionButton">加入书架</button>
     <button class="actionButton">添加到我的图书馆</button>
-    <button class="actionButton">下载 EPUB，{{ bookFileSize }}</button>
-    <RouterLink :to="`/books/catalog/${bookId}`" class="actionButton">目录</RouterLink>
+    <button class="actionButton">下载 EPUB{{ bookFileSize }}</button>
+    <button class="actionButton">目录</button>
   </div>
   <InterestedBooks>
     <template #title>
@@ -49,7 +49,7 @@ const this_detail=ref(detail);
 
 onMounted(() => {
   // console.log("bookInfor 挂载")
-  // console.log("bookinfo:",author,type,content_url,cover,publication_date,publisher,title,useRoute().query);
+  console.log("bookinfo:",author,type,content_url,cover,publication_date,publisher,title,useRoute().query);
   let change_title="";
   let flag=false;
   for(let i=0;i<title.length;i++){
@@ -58,6 +58,10 @@ onMounted(() => {
     if(title[i]==".")flag=!flag;
   }
   this_title.value=change_title;
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth", // 平滑滚动
+  });
 });
 
 </script>
@@ -71,7 +75,7 @@ onMounted(() => {
   justify-content: center; /* 水平居中按钮 */
 }
 .actionButton {
-  width: 250px;
+  width: 14%;
   padding: 15px 10px;
   background-color: #007bff;
   color: white;

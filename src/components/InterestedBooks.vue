@@ -1,15 +1,13 @@
 <template>
   <div class="interested-books">
     <slot name="title">默认标题</slot>
+    <div v-if="loading" class="loading-animation">加载中<span class="dots">{{ dots }}</span></div>
+
     <div class="books-grid">
       <BookItem v-for="book in displayedBooks" :key="book.id" :book="book" />
     </div>
-    <div class="load-more-container" v-if="hasMoreBooks">
-      <div class="load-more-button" @click="loadMoreBooks" :class="{ loading: loading }">
-        <span v-if="!loading">加载更多</span>
-        <span v-else>加载�?...</span>
-        <span class="arrow" v-if="!loading">�?</span>
-      </div>
+    <div class="load-more-container">
+      <div class="load-more-button" @click="loadBooks" :class="{ loading: loading }">加载更多...</div>
     </div>
   </div>
 </template>
@@ -17,87 +15,104 @@
 <script setup>
 import BookItem from './BookItem.vue';
 import { ref, computed, onMounted } from 'vue';
-import { useBooksStore } from '@/store/books';
 import axios from 'axios';
 
 
-const allBooks = ref([]);
-
 const displayedBooks = ref([]);
-const currentPage = ref(1);
-const booksPerPage = 15;
-const loading = ref(false);
+
 
 const getBack=ref([]);
 
+const page=ref(0);
+const size=ref(30);
+
+const loading = ref(false);
+const dots = ref(""); // 用于显示点的数量
+
+// 动态更新点的数量
+setInterval(() => {
+  if (loading.value) {
+    dots.value = dots.value.length < 3 ? dots.value + "." : "";
+  }
+}, 500);
 
 
 async function getList() {
+  loading.value = true; // 开始加载
+  let cur_params={
+    page:page.value,
+    size:size.value
+  };
   const res=await axios({
-    url: 'http://121.40.60.94:8088/libraryList',
+    url: 'http://localhost:8088/libraryList',
     method: 'GET',
-  })
-  // console.log(res.data.data.content);
+    params: cur_params
+  });
+  console.log("res",res.data.data.content);
   getBack.value.push(...res.data.data.content);
+  page.value=page.value+1;
+  loading.value = false; // 加载完成
 }
 
-// 初始化显示前20本书
+// 初始化显示前30本书
 onMounted(async () => {
-  
-
+    loading.value = true; // 开始加载
     console.log("onMounted");
     await getList();
-    // console.log(getBack._rawValue[0]);
-
-    for(let i=0;i<20;i++)
+    console.log("getBack",getBack.value);
+    for(let i=0;i<30;i++)
     {
-        let cur=getBack._rawValue[i];
-        // console.log(cur)
+        let cur=getBack.value[i];
         displayedBooks.value.unshift({id:i, author:cur.author, type:cur.type, content_url:cur.content_url, cover:cur.cover_image_url, publication_date:cur.publication_date, publisher:cur.publisher, title:cur.title, detail:cur.summary}  )
     }
-    // console.log(displayedBooks.value);
-
-    for(let i=0;i<getBack._rawValue.length;i++)
-    {
-        let cur=getBack._rawValue[i];
-        allBooks.value.unshift({id:i, author:cur.author, type:cur.type, content_url:cur.content_url, cover:cur.cover_image_url, publication_date:cur.publication_date, publisher:cur.publisher, title:cur.title, detail:cur.summary});
-    }
-    // console.log(allBooks.value);
-    
-  
-    // booksStore.fetchBooks();
-    // loadBooks();
+    loading.value = false; // 加载完成
 });
 
-const loadBooks = () => {
-  
-  const startIndex = (currentPage.value - 1) * booksPerPage;
-  const endIndex = startIndex + booksPerPage;
-  const booksToDisplay = allBooks.value.slice(startIndex, endIndex);
-  displayedBooks.value = [...displayedBooks.value, ...booksToDisplay];
+async function loadBooks() {
+  loading.value = true; // 开始加载
+  console.log("loadBooks");
+  await getList();
+  console.log("getBack",getBack.value);
+
+  const startIndex = (page.value-1) * size.value;
+  const endIndex = startIndex + size.value;
+  console.log("startIndex",startIndex,"endIndex",endIndex);
+
+  for(let i=startIndex;i<endIndex;i++)  
+  {
+      let cur=getBack.value[i];
+      console.log("cur",cur);
+      displayedBooks.value.push({id:i, author:cur.author, type:cur.type, content_url:cur.content_url, cover:cur.cover_image_url, publication_date:cur.publication_date, publisher:cur.publisher, title:cur.title, detail:cur.summary}  )
+  }
+  loading.value = false; // 加载完成
+  // console.log("displayedBooks",displayedBooks.value);
 };
 
-const loadMoreBooks = () => {
-  if (loading.value) return;
-  loading.value = true;
 
-  setTimeout(() => {
-    currentPage.value++;
-    loadBooks();
-    loading.value = false;
-  }, 1000); // 模拟网络延迟
-};
 
-const hasMoreBooks = computed(() => {
-  return currentPage.value * booksPerPage < allBooks.value.length;
-});
+
 </script>
 
 <style scoped>
+
 .interested-books {
   margin-top: 40px;
   width: 1000px;
   margin: 0 auto;
+}
+
+.loading-animation {
+  font-size: 18px;
+  color: #0066cc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.dots {
+  font-weight: bold;
+  margin-left: 5px;
 }
 
 .books-grid {

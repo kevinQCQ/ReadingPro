@@ -3,31 +3,102 @@
     <!-- 顶部导航栏 -->
     <headerBox></headerBox>
 
+    <!-- 分类导航栏 -->
+    <nav class="category-nav">
+      <ul class="category-list">
+        <li
+          class="category-item"
+          :class="{ active: selectedCategory === '爱情' }"
+          @click="filterBooks('爱情')"
+        >
+          爱情
+        </li>
+        <li
+          class="category-item"
+          :class="{ active: selectedCategory === '成长' }"
+          @click="filterBooks('成长')"
+        >
+          成长
+        </li>
+        <li
+          class="category-item"
+          :class="{ active: selectedCategory === '战争' }"
+          @click="filterBooks('战争')"
+        >
+          战争
+        </li>
+        <li
+          class="category-item"
+          :class="{ active: selectedCategory === '社会与阶级' }"
+          @click="filterBooks('社会与阶级')"
+        >
+          社会与阶级
+        </li>
+        <li
+          class="category-item"
+          :class="{ active: selectedCategory === '人性' }"
+          @click="filterBooks('人性')"
+        >
+          人性
+        </li>
+        <li
+          class="category-item"
+          :class="{ active: selectedCategory === '自由与束缚' }"
+          @click="filterBooks('自由与束缚')"
+        >
+          自由与束缚
+        </li>
+        <li
+          class="category-item"
+          :class="{ active: selectedCategory === '死亡与永生' }"
+          @click="filterBooks('死亡与永生')"
+        >
+          死亡与永生
+        </li>
+        <li
+          class="category-item"
+          :class="{ active: selectedCategory === '自然与环境' }"
+          @click="filterBooks('自然与环境')"
+        >
+          自然与环境
+        </li>
+        <li
+          class="category-item"
+          :class="{ active: selectedCategory === '历史与文化' }"
+          @click="filterBooks('历史与文化')"
+        >
+          历史与文化
+        </li>
+        <li
+          class="category-item"
+          :class="{ active: selectedCategory === '宗教与信仰' }"
+          @click="filterBooks('宗教与信仰')"
+        >
+          宗教与信仰
+        </li>
+        <li
+          class="category-item"
+          :class="{ active: selectedCategory === '科技与未来' }"
+          @click="filterBooks('科技与未来')"
+        >
+          科技与未来
+        </li>
+        <li
+          class="category-item"
+          :class="{ active: selectedCategory === '自我发现' }"
+          @click="filterBooks('自我发现')"
+        >
+          自我发现
+        </li>
+      </ul>
+    </nav>
+
     <!-- 主要内容区域 -->
     <div class="main-content">
       <!-- Logo和标语 -->
       <div class="logo-section">
-        <img src="../assets/logo.zlibrary.svg" alt="" class="logo-img">
+        
         <p class="tagline">您通往知识和文化的门户。每个人都可以使用。</p>
-      </div>
-
-      <!-- 搜索功能区域 -->
-      <div class="search-section">
-        <el-input
-          v-model="searchQuery"
-          placeholder="按书名、作者、ISBN、DOI、出版社、MD5等搜索..."
-          class="search-input"
-          @keyup.enter.native="handleSearch"
-        >
-        </el-input>
-        <el-button type="primary" class="search-button" @click="handleSearch">
-          <el-icon><Search /></el-icon>
-        </el-button>
-      </div>
-
-      <!-- 项目信息 -->
-      <div class="project-info">
-        <p>官方Z-Library项目 - 免费访问电子书和文章</p>
       </div>
 
       <!-- 最受欢迎书籍 -->
@@ -44,7 +115,6 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { Search } from '@element-plus/icons-vue';
 import headerBox from '@/components/header-box.vue';
 import InterestedBooks from '@/components/InterestedBooks.vue';
 import { useBooksStore } from '@/store/books';
@@ -79,15 +149,54 @@ const handleSearch = () => {
   font-weight: bold;
 }
 
+.category-nav {
+  background-color: #f5f5f5;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.category-list {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-item {
+  font-family: "Microsoft YaHei", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  color: #409eff;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.category-item:hover {
+  background-color: #409eff;
+  color: white;
+}
+
+.category-item.active {
+  background-color: #3078c6;
+  color: white;
+}
+
+
 
 /* Logo和标语 */
 .main-content {
   text-align: center;
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 .logo-section {
-  margin-bottom: 40px;
+  margin-bottom: 15px;
 }
 
 .logo-img {
@@ -101,22 +210,7 @@ const handleSearch = () => {
   margin-top: 10px;
 }
 
-/* 搜索功能区域 */
-.search-section {
-  max-width: 800px;
-  margin: 0 auto 40px;
-  display: flex;
-}
 
-.search-input {
-  flex-grow: 1;
-}
-
-.search-button {
-  background-color: #409eff;
-  border-color: #409eff;
-  color: white;
-}
 
 /* 项目信息 */
 .project-info {
@@ -128,7 +222,7 @@ const handleSearch = () => {
 /* 最受欢迎书籍 */
 .popular-books {
   margin-top: 40px;
-  width: 1000px;
+  width: 100%;
   margin: 0 auto;
 }
 
