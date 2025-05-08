@@ -168,7 +168,10 @@ const handleSearch = () => {
 
 .category-item {
   font-family: "Microsoft YaHei", Arial, sans-serif;
-  font-size: 16px;
+  display: inline-block; /* 确保文字水平排列 */
+  white-space: normal; /* 确保文字正常换行 */
+  writing-mode: horizontal-tb; /* 确保文字水平书写 */
+  font-size: 14px;
   font-weight: bold;
   color: #409eff;
   cursor: pointer;

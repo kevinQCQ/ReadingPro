@@ -44,7 +44,7 @@ async function getList() {
     size:size.value
   };
   const res=await axios({
-    url: 'http://localhost:8088/libraryList',
+    url: 'http://121.40.60.94:8088/libraryList',
     method: 'GET',
     params: cur_params
   });

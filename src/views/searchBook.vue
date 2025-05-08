@@ -27,7 +27,7 @@ const router = useRouter(); // 获取路由实例
 
 onMounted(async () => {
 try {
-    const response = await axios.get('http://localhost:8088/search/', {
+    const response = await axios.get('http://121.40.60.94:8088/search/', {
     params: {
         query: route.query.query, // 获取查询参数
     },
