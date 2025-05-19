@@ -1,37 +1,40 @@
 <template>
   <div class="bookInfo">
+    <!-- 书籍封面 -->
     <div class="bookCover">
-      <img :src="cover" alt="cover">
+      <img :src="cover" alt="书籍封面" />
     </div>
+
+    <!-- 书籍详细信息 -->
     <div class="bookDetails">
-      <h1>{{ title }}</h1>
+      <h1 class="bookTitle">{{ title }}</h1>
       <div class="bookAuthor">
-        <span>{{ author }}</span>
+        <span>作者: {{ author }}</span>
       </div>
       <div class="bookRating">
         <span>⭐ {{ bookRating }} / 5.0</span>
-        <span>📝 {{ commentCount }} comments</span>
+        <span>📝 {{ commentCount }} 条评论</span>
         <span>📖 纸质书</span>
       </div>
-      <div class="bookQuote">
-        <p>{{  }}</p>
+      <div class="bookQuote" v-if="bookQuote">
+        <blockquote>“{{ bookQuote }}”</blockquote>
       </div>
       <div class="bookAttributes">
-        <div class="attributeRow"  :key="index">
-          <span>类型:</span>
-          <span>{{type}}</span>
+        <div class="attributeRow">
+          <span class="attributeLabel">类型:</span>
+          <span class="attributeValue">{{ type }}</span>
         </div>
-        <div class="attributeRow" :key="index">
-          <span>出版日期:</span>
-          <span>{{ publication_date }}</span>
+        <div class="attributeRow">
+          <span class="attributeLabel">出版日期:</span>
+          <span class="attributeValue">{{ publication_date }}</span>
         </div>
-        <div class="attributeRow" :key="index">
-          <span>出版商:</span>
-          <span>{{ props.publisher }}</span>
+        <div class="attributeRow">
+          <span class="attributeLabel">出版商:</span>
+          <span class="attributeValue">{{ publisher }}</span>
         </div>
-        <div class="attributeRow" :key="index"></div>
-        <div class="attributeRow" :key="index">
-          <span>{{ props.detail }}</span>
+        <div class="attributeRow">
+          <span class="attributeLabel">简介:</span>
+          <span class="attributeValue">{{ detail }}</span>
         </div>
       </div>
     </div>
@@ -45,97 +48,101 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const bookId = route.params.id;
 
-
 const props = defineProps({
-  author: {
-    type: String,
-    required: true,
-  },
-  type: { 
-    type: String,
-    required: true,
-  },
-  content_url: {
-    type: String,
-    required: true,
-  },
-  cover: {
-    type: String,
-    required: true,
-  },
-  publication_date: {
-    type: String,
-    required: true,
-  },
-  detail: {
-    type: String,
-    required: true,
-  },
-  publisher: {
-    type: String,
-    required: true,
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-})
+  author: { type: String, required: true },
+  type: { type: String, required: true },
+  content_url: { type: String, required: true },
+  cover: { type: String, required: true },
+  publication_date: { type: String, required: true },
+  detail: { type: String, required: true },
+  publisher: { type: String, required: true },
+  title: { type: String, required: true },
+});
 
-
+const bookRating = ref(4.5); // 示例评分
+const commentCount = ref(120); // 示例评论数
+const bookQuote = ref('天生一个仙人洞，无限风光在险峰'); // 示例引言
 
 onMounted(() => {
-  // 获取路由参数
-  // console.log(`加载书籍 ID: ${bookId}`);
-  console.log(props.detail)
-})
-
-const bookCover = ref('https://s3proxy.cdn-zlib.sk/covers300/collections/genesis/25728e84dca6ab1a24fd76ac46fc6bdb759cdfc3fecd00053e5c3a72e64fcdfc.jpg');
-const bookTitle = ref('毛泽东选集一至七卷');
-const bookAuthor = ref('毛泽东');
-const bookRating = ref(5.0);
-const commentCount = ref(142);
-const bookQuote = ref('天生一个仙人洞，无限风光在险峰');
-const bookAttributes = ref([
-  { label: '类别:', value: 'Society, Politics & Philosophy' },
-  { label: '年:', value: '1991' },
-  { label: '语言:', value: 'Chinese' },
-  { label: 'ISBN 10:', value: '7010009147' },
-  { label: '系列:', value: '毛泽东选集' },
-  { label: 'IPFS:', value: 'CID，CID Blake2b' },
-  { label: '内容类型:', value: '图书' },
-  { label: '出版商:', value: '人民出版社' },
-  { label: '页数:', value: '340' },
-  { label: 'ISBN 13:', value: '9787010009148' },
-  { label: '文件:', value: 'EPUB，2.78 MB' }
-]);
-const bookFileSize = ref('2.78 MB');
+  console.log(`加载书籍 ID: ${bookId}`);
+});
 </script>
-
 <style scoped>
 .bookInfo {
   display: flex;
   align-items: flex-start;
-  width: 1000px;
-  margin: 30px auto; /* 水平居中 */
-  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto; /* 水平居中，减少外边距 */
+  gap: 20px; /* 减少封面和详细信息之间的间距 */
+  font-family: "Microsoft YaHei", Arial, sans-serif;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .bookCover img {
-  width: 280px;
+  width: 300px;
   height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .bookDetails {
   flex: 1;
-  text-align: left; /* 左对齐文本 */
+  text-align: left;
 }
-.bookRating,
+
+.bookTitle {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 5px; /* 减少标题和作者之间的间距 */
+  color: #333;
+}
+
+.bookAuthor {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 10px; /* 减少作者和评分之间的间距 */
+}
+
+.bookRating {
+  display: flex;
+  gap: 10px; /* 减少评分项之间的间距 */
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 10px; /* 减少评分和引言之间的间距 */
+}
+
+.bookQuote {
+  font-style: italic;
+  color: #555;
+  margin-bottom: 15px; /* 减少引言和属性之间的间距 */
+  padding-left: 10px;
+  border-left: 4px solid #409eff;
+}
+
 .bookAttributes {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: column;
+  gap: 10px; /* 减少属性行之间的间距 */
 }
+
 .attributeRow {
-  flex: 0 0 40%; /* 每行四个信息 */
   display: flex;
   justify-content: space-between;
+  font-size: 14px;
+  color: #444;
+}
+
+.attributeLabel {
+  font-weight: bold;
+  color: #333;
+}
+
+.attributeValue {
+  color: #666;
 }
 </style>

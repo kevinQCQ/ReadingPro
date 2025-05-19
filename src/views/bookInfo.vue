@@ -8,6 +8,7 @@
        id: 1,
        book_title: title, 
        chapter_path: content_url, 
+       fileName: fileName,
        chapter_id: '1'
        }}" class="actionButton">开始阅读</RouterLink>
     <button class="actionButton">加入书架</button>
@@ -28,13 +29,13 @@ import headerBox from '@/components/header-box.vue';
 import BookDetail from '@/components/BookDetail.vue';
 import InterestedBooks from '@/components/InterestedBooks.vue';
 import { useRoute } from 'vue-router';
-import { onMounted } from 'vue';
+import { onMounted ,watch} from 'vue';
 import {ref} from 'vue';
 
 
 // 目标页面通过route.query获取
 const bookId = useRoute().params.id;  // 路径参数
-const { author,type,content_url,cover,publication_date,publisher,title,detail} = useRoute().query; // 查询参数
+const { author,type,content_url,cover,publication_date,publisher,title,detail,fileName} = useRoute().query; // 查询参数
 
 
 const this_author=ref(author);
@@ -45,6 +46,22 @@ const this_publication_date=ref(publication_date);
 const this_publisher=ref(publisher);
 const this_title=ref(title);
 const this_detail=ref(detail);
+
+const route = useRoute(); // 获取路由信息
+
+// 更新数据的方法
+function updateBookInfo() {
+  const { author, type, content_url, cover, publication_date, publisher, title, detail ,fileName} = route.query;
+
+  this_author.value = author || '';
+  this_type.value = type || '';
+  this_content_url.value = content_url || '';
+  this_cover.value = cover || '';
+  this_publication_date.value = publication_date || '';
+  this_publisher.value = publisher || '';
+  this_title.value = title || '';
+  this_detail.value = detail || '';
+}
 
 
 onMounted(() => {
@@ -62,7 +79,25 @@ onMounted(() => {
     top: 0,
     behavior: "smooth", // 平滑滚动
   });
+
+  updateBookInfo();
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth', // 平滑滚动
+  });
 });
+
+// 监听路由变化
+watch(
+  () => route.query,
+  () => {
+    updateBookInfo();
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth', // 平滑滚动
+    });
+  }
+);
 
 </script>
 

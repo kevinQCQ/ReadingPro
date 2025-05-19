@@ -3,92 +3,18 @@
     <!-- 顶部导航栏 -->
     <headerBox></headerBox>
 
+    <!-- 网络文学、言情、武侠、历史、悬疑推理、奇幻、科幻、传说、神话、寓言、传记、戏剧、散文、诗歌、长篇小说、短篇小说、中篇小说 -->
     <!-- 分类导航栏 -->
     <nav class="category-nav">
       <ul class="category-list">
         <li
+          v-for="category in categories"
+          :key="category"
           class="category-item"
-          :class="{ active: selectedCategory === '爱情' }"
-          @click="filterBooks('爱情')"
+          :class="{ active: selectedCategory === category }"
+          @click="filterBooks(category)"
         >
-          爱情
-        </li>
-        <li
-          class="category-item"
-          :class="{ active: selectedCategory === '成长' }"
-          @click="filterBooks('成长')"
-        >
-          成长
-        </li>
-        <li
-          class="category-item"
-          :class="{ active: selectedCategory === '战争' }"
-          @click="filterBooks('战争')"
-        >
-          战争
-        </li>
-        <li
-          class="category-item"
-          :class="{ active: selectedCategory === '社会与阶级' }"
-          @click="filterBooks('社会与阶级')"
-        >
-          社会与阶级
-        </li>
-        <li
-          class="category-item"
-          :class="{ active: selectedCategory === '人性' }"
-          @click="filterBooks('人性')"
-        >
-          人性
-        </li>
-        <li
-          class="category-item"
-          :class="{ active: selectedCategory === '自由与束缚' }"
-          @click="filterBooks('自由与束缚')"
-        >
-          自由与束缚
-        </li>
-        <li
-          class="category-item"
-          :class="{ active: selectedCategory === '死亡与永生' }"
-          @click="filterBooks('死亡与永生')"
-        >
-          死亡与永生
-        </li>
-        <li
-          class="category-item"
-          :class="{ active: selectedCategory === '自然与环境' }"
-          @click="filterBooks('自然与环境')"
-        >
-          自然与环境
-        </li>
-        <li
-          class="category-item"
-          :class="{ active: selectedCategory === '历史与文化' }"
-          @click="filterBooks('历史与文化')"
-        >
-          历史与文化
-        </li>
-        <li
-          class="category-item"
-          :class="{ active: selectedCategory === '宗教与信仰' }"
-          @click="filterBooks('宗教与信仰')"
-        >
-          宗教与信仰
-        </li>
-        <li
-          class="category-item"
-          :class="{ active: selectedCategory === '科技与未来' }"
-          @click="filterBooks('科技与未来')"
-        >
-          科技与未来
-        </li>
-        <li
-          class="category-item"
-          :class="{ active: selectedCategory === '自我发现' }"
-          @click="filterBooks('自我发现')"
-        >
-          自我发现
+          {{ category }}
         </li>
       </ul>
     </nav>
@@ -97,8 +23,8 @@
     <div class="main-content">
       <!-- Logo和标语 -->
       <div class="logo-section">
-        
         <p class="tagline">您通往知识和文化的门户。每个人都可以使用。</p>
+        <p class="tagline">当前全站共{{bookNumber}}本图书</p>
       </div>
 
       <!-- 最受欢迎书籍 -->
@@ -117,17 +43,48 @@
 import { ref, onMounted, computed } from 'vue';
 import headerBox from '@/components/header-box.vue';
 import InterestedBooks from '@/components/InterestedBooks.vue';
-import { useBooksStore } from '@/store/books';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const searchQuery = ref('');
-const booksStore = useBooksStore();
+const router = useRouter();
+const bookNumber = ref(0); // 用于存储书籍数量
 
 // 模拟书籍数据
 onMounted(() => {
-  booksStore.fetchBooks();
+  axios.get('http://121.40.60.94:8088/libraryList/getNumber')
+    .then(response => {
+      bookNumber.value = response.data.data;
+    })
+    .catch(error => {
+      console.error('获取书籍数量失败:', error);
+    });
 });
 
 const books = computed(() => booksStore.books);
+
+// 分类列表
+const categories = [
+  '网络文学', '言情', '武侠', '历史', '悬疑推理', '奇幻', '科幻',
+  '传说', '神话', '寓言', '传记', '戏剧', '散文', '诗歌',
+  '长篇小说', '短篇小说', '中篇小说'
+];
+
+const selectedCategory = ref(''); // 当前选中的分类
+
+// 筛选书籍
+function filterBooks(category) {
+  selectedCategory.value = category; // 更新选中的分类
+  console.log(`筛选分类: ${category}`);
+  // 在这里可以添加筛选逻辑，例如根据分类从后端获取数据
+
+  router.push({
+    name: 'bookCatalog',
+    query:{
+      type: category // 将分类作为查询参数传递
+    }
+  })
+}
 
 const handleSearch = () => {
   console.log('搜索:', searchQuery.value);
@@ -159,8 +116,9 @@ const handleSearch = () => {
 
 .category-list {
   display: flex;
+  flex-wrap: wrap; /* 允许换行 */
   justify-content: center;
-  gap: 20px;
+  gap: 10px;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -171,6 +129,7 @@ const handleSearch = () => {
   display: inline-block; /* 确保文字水平排列 */
   white-space: normal; /* 确保文字正常换行 */
   writing-mode: horizontal-tb; /* 确保文字水平书写 */
+  text-emphasis: center; /* 确保文字居中对齐 */
   font-size: 14px;
   font-weight: bold;
   color: #409eff;
@@ -178,6 +137,9 @@ const handleSearch = () => {
   padding: 5px 10px;
   border-radius: 4px;
   transition: background-color 0.3s ease, color 0.3s ease;
+  max-width: 100px; /* 限制分类项的最大宽度 */
+  word-break: break-word; /* 长单词换行 */
+  overflow-wrap: break-word; /* 支持换行 */
 }
 
 .category-item:hover {
@@ -189,8 +151,6 @@ const handleSearch = () => {
   background-color: #3078c6;
   color: white;
 }
-
-
 
 /* Logo和标语 */
 .main-content {
@@ -209,11 +169,9 @@ const handleSearch = () => {
 
 .tagline {
   color: #666;
-  font-size: 14px;
-  margin-top: 10px;
+  font-size: 11px;
+  margin-top: 6px;
 }
-
-
 
 /* 项目信息 */
 .project-info {
@@ -224,7 +182,7 @@ const handleSearch = () => {
 
 /* 最受欢迎书籍 */
 .popular-books {
-  margin-top: 40px;
+  margin-top: 10px;
   width: 100%;
   margin: 0 auto;
 }

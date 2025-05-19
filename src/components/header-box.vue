@@ -9,7 +9,7 @@
       <!-- 导航链接 -->
       <nav class="navbar-links">
         <RouterLink to="/" class="navbar-link" :class="{ active: activeLink === '首页' }" @click="setActiveLink('首页')">首页</RouterLink>
-        <RouterLink to="/anime" class="navbar-link" :class="{ active: activeLink === '留言榜' }" @click="setActiveLink('留言榜')">留言榜</RouterLink>
+        <RouterLink :to="{name: 'messageBoard', }" class="navbar-link" :class="{ active: activeLink === '留言榜' }" @click="setActiveLink('留言榜')">留言榜</RouterLink>
         <RouterLink to="/manga" class="navbar-link" :class="{ active: activeLink === '关于我们' }" @click="setActiveLink('关于我们')">关于我们</RouterLink>
       </nav>
 

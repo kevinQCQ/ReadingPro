@@ -5,6 +5,7 @@ import bookInfo from '@/views/bookInfo.vue'
 import bookRead from '@/views/bookRead.vue';
 import bookCatalog from '../views/bookCatalog.vue';
 import searchBook from '@/views/searchBook.vue';
+import messageBoard from '@/views/messageBoard.vue';
 
 
 const routes = [
@@ -14,7 +15,7 @@ const routes = [
         component: home,
     },
     {
-        path: '/books/:id',
+        path: '/books',
         name: 'bookInfo',
         component: bookInfo,
         props: true,
@@ -27,7 +28,7 @@ const routes = [
 
     },
     {
-        path: '/books/catalog/:id',
+        path: '/books/catalog',
         name: 'bookCatalog',
         component: bookCatalog,
         props: true,
@@ -36,6 +37,12 @@ const routes = [
         path: '/searchBook',
         name: 'searchBook',
         component: searchBook,
+        props: true,
+    }
+    ,{
+        path: '/messageBoard',
+        name: 'messageBoard',
+        component: messageBoard,
         props: true,
     }
 ]

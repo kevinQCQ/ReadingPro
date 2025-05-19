@@ -16,16 +16,13 @@
 import BookItem from './BookItem.vue';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
+import { useStore} from 'vuex';
 
-
+const store=useStore();
 const displayedBooks = ref([]);
-
-
 const getBack=ref([]);
-
 const page=ref(0);
 const size=ref(30);
-
 const loading = ref(false);
 const dots = ref(""); // 用于显示点的数量
 
@@ -44,7 +41,7 @@ async function getList() {
     size:size.value
   };
   const res=await axios({
-    url: 'http://121.40.60.94:8088/libraryList',
+    url: store.getters.getUrl + '/libraryList',
     method: 'GET',
     params: cur_params
   });
@@ -63,7 +60,7 @@ onMounted(async () => {
     for(let i=0;i<30;i++)
     {
         let cur=getBack.value[i];
-        displayedBooks.value.unshift({id:i, author:cur.author, type:cur.type, content_url:cur.content_url, cover:cur.cover_image_url, publication_date:cur.publication_date, publisher:cur.publisher, title:cur.title, detail:cur.summary}  )
+        displayedBooks.value.unshift({id:i, author:cur.author, type:cur.type, content_url:cur.content_url, cover:cur.cover_image_url, publication_date:cur.publication_date, publisher:cur.publisher, title:cur.title, detail:cur.summary ,fileName:cur.fileName}  )
     }
     loading.value = false; // 加载完成
 });
@@ -82,14 +79,11 @@ async function loadBooks() {
   {
       let cur=getBack.value[i];
       console.log("cur",cur);
-      displayedBooks.value.push({id:i, author:cur.author, type:cur.type, content_url:cur.content_url, cover:cur.cover_image_url, publication_date:cur.publication_date, publisher:cur.publisher, title:cur.title, detail:cur.summary}  )
+      displayedBooks.value.push({id:i, author:cur.author, type:cur.type, content_url:cur.content_url, cover:cur.cover_image_url, publication_date:cur.publication_date, publisher:cur.publisher, title:cur.title, detail:cur.summary ,fileName:cur.fileName}  )
   }
   loading.value = false; // 加载完成
   // console.log("displayedBooks",displayedBooks.value);
 };
-
-
-
 
 </script>
 

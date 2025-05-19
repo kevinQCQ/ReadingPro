@@ -11,18 +11,18 @@
           <div v-if="isLoading" class="loading-spinner"></div>
           <div v-if="isLoading" class="loading-text">加载中...</div>
           <div v-if="!isLoading" class="content-title">
-              <h2 class="chapter-title">第{{ my_chapter_id }}章</h2>
+              <h2 class="chapter-title">第{{ my_chapter_id }}板</h2>
           </div>
           <div>
-              <h3 v-for="(content,index) in content_arr" :key="index">{{ content }}</h3>
+              <h3>{{ content_arr[my_chapter_id] }}</h3>
           </div>
         </div>
       </div>
       <!-- 添加按钮组 -->
       <div class="button-group">
-        <button v-if="my_chapter_id!=1" @click="getPrevChapterPath" class="chapter-button">前一章</button>
+        <button v-if="my_chapter_id!=0" @click="getPrevChapterPath" class="chapter-button">上一板</button>  
         <!-- <button :to="`/books/catalog/${bookId}`" class="chapter-button">返回目录</button> -->
-        <button @click="getNextChapterPath()" class="chapter-button">下一章</button>
+        <button v-if="my_chapter_id!=content_arr.length-1" @click="getNextChapterPath()" class="chapter-button">下一板</button>
       </div>
       <RouterLink to="/books/1" class="back-button">返回书籍详情</RouterLink>
     </div>
@@ -41,13 +41,16 @@ import { useRoute ,useRouter } from 'vue-router';
 import headerBox from '@/components/header-box.vue';
 import InterestedBooks from '@/components/InterestedBooks.vue';
 import axios from 'axios'
+import { useStore } from 'vuex'; // 引入 Vuex store
 
 let route = useRoute();
 
 const content_arr=ref([])
-const my_book_title=ref(route.query.book_title)
-const my_chapter_path=ref(route.query.chapter_path)
-const my_chapter_id=ref(route.query.chapter_id)   
+const my_chapter_id=ref(1) 
+const my_fileName=ref(route.query.fileName) // 获取文件名
+
+const store = useStore(); // 获取 Vuex store 实例
+
 const real_title=ref(route.query.book_title)  
 const isLoading = ref(false); // 用于控制加载状态
 
@@ -69,8 +72,6 @@ onMounted(async() => {
 const getPrevChapterPath = async() => {
   isLoading.value=true;
   my_chapter_id.value=parseInt(my_chapter_id.value)-1;
-  content_arr.value=await get_Novel_Chapter();
-  console.log("content_arr.value",content_arr.value)
   isLoading.value=false;
   // 滚动到顶部
   window.scrollTo({
@@ -95,12 +96,10 @@ async function get_Novel_Chapter()
 {
     let cur_content=[];
     const cur_params={
-        book_title:encodeURI(my_book_title.value),
-        chapter_path:encodeURI(my_chapter_path.value),
-        chapter_id:encodeURI("第"+my_chapter_id.value+"章")
+        fileName:my_fileName.value
     };
     
-    await axios.get('http://121.40.60.94:8088/library/novelChapter',{params:cur_params}).then(
+    await axios.get(store.getters.getUrl()+'/epub/getChapterFromEpub',{params:{fileName:my_fileName.value}}).then(
         (res) => {
             for(let i=0;i<res.data.data.length;i++)
             {
@@ -108,6 +107,7 @@ async function get_Novel_Chapter()
             }
         }
     ).catch((err)=>{console.log(err)});
+    console.log("cur_params",cur_params);
     console.log("cur_content",cur_content);
     return cur_content;
 }
@@ -116,8 +116,6 @@ async function get_Novel_Chapter()
 const getNextChapterPath = async () => {
   isLoading.value=true;
   my_chapter_id.value=parseInt(my_chapter_id.value)+1;
-  content_arr.value=await get_Novel_Chapter();
-  console.log("content_arr.value",content_arr.value)
   isLoading.value=false;
   // 滚动到顶部
   window.scrollTo({

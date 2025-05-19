@@ -20,14 +20,16 @@
 import { ref, onMounted } from 'vue';
 import { useRoute , useRouter} from 'vue-router';
 import axios from 'axios';
+import { useStore } from 'vuex'; // 引入 Vuex store
 
 const route = useRoute(); // 获取路由信息
 const books = ref([]); // 存储搜索结果
 const router = useRouter(); // 获取路由实例
+const store=useStore();
 
 onMounted(async () => {
 try {
-    const response = await axios.get('http://121.40.60.94:8088/search/', {
+    const response = await axios.get(store.getters.getUrl + '/search/', {
     params: {
         query: route.query.query, // 获取查询参数
     },

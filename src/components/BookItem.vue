@@ -1,7 +1,7 @@
 <template>
   <RouterLink
     :to="{
-      path: `/books/${props.book.id}`,
+      name: 'bookInfo',
       query: {
         author: props.book.author,
         title: props.book.title,
@@ -11,9 +11,11 @@
         content_url: props.book.content_url,
         publication_date: props.book.publication_date,
         publisher: props.book.publisher,
+        fileName: props.book.fileName,
       },
     }"
     class="book-card"
+    @click="handleClick"
   >
     <div class="book-cover-container">
       <img
@@ -33,7 +35,10 @@
 </template>
 
 <script setup>
-import { defineProps, ref, onMounted } from 'vue';
+import { defineProps, ref, onMounted ,watch} from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute(); // 获取路由信息
 
 const props = defineProps({
   book: {
@@ -45,21 +50,7 @@ const props = defineProps({
 const loaded = ref(false);
 const book_title =ref(props.book.title);
 
-function change_title() {
-  let change_title = '';
-  let flag = false;
-  for (let i = 0; i < book_title.value.length; i++) {
-    if (flag && book_title.value[i] == '.') break;
-    if (flag) change_title += book_title.value[i];
-    if (book_title.value[i] == '.') flag = !flag;
-  }
-  return change_title;
-}
-
 onMounted(() => {
-
-  book_title.value = change_title();
-
   const img = new Image();
   img.src = props.book.cover;
   img.onload = () => {
@@ -70,6 +61,11 @@ onMounted(() => {
     console.log(`图片加载失败: ${props.book.cover}`);
   };
 });
+
+function handleClick() {
+  // 这里可以添加点击事件的逻辑
+  console.log('Clicked on book:', props.book.title);
+}
 </script>
 
 <style scoped>
