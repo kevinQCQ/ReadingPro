@@ -9,8 +9,7 @@
       <!-- 导航链接 -->
       <nav class="navbar-links">
         <RouterLink to="/" class="navbar-link" :class="{ active: activeLink === '首页' }" @click="setActiveLink('首页')">首页</RouterLink>
-        <RouterLink :to="{name: 'messageBoard', }" class="navbar-link" :class="{ active: activeLink === '留言榜' }" @click="setActiveLink('留言榜')">留言榜</RouterLink>
-        <RouterLink to="/manga" class="navbar-link" :class="{ active: activeLink === '关于我们' }" @click="setActiveLink('关于我们')">关于我们</RouterLink>
+        <RouterLink :to="{name: 'messageBoard'}" class="navbar-link" :class="{ active: activeLink === '留言榜' }" @click="setActiveLink('留言榜')">留言榜</RouterLink>
       </nav>
 
       <!-- 搜索框 -->
@@ -21,39 +20,64 @@
 
       <!-- 用户操作 -->
       <div class="navbar-user">
-        <RouterLink to="/login" class="navbar-login">登录</RouterLink>
-        <RouterLink to="/register" class="navbar-register">注册</RouterLink>
+        <template v-if="userInfo">
+          <img :src="userInfo.avatar || defaultAvatar" class="navbar-avatar" />
+          <span class="navbar-username">{{ userInfo.userName }}</span>
+        </template>
+        <template v-else>
+          <RouterLink to="/login" class="navbar-login">登录</RouterLink>
+          <RouterLink to="/register" class="navbar-register">注册</RouterLink>
+        </template>
       </div>
     </div>
   </header>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { RouterLink } from 'vue-router';
-import axios from 'axios';
-import {useRouter} from 'vue-router';
+import { ref, computed } from 'vue';
+import { RouterLink, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
-const activeLink = ref('首页'); // 当前激活的导航链接
-const searchQuery = ref(''); // 搜索框内容
-const router = useRouter(); // 获取路由对象
+const activeLink = ref('首页');
+const searchQuery = ref('');
+const router = useRouter();
+const store = useStore();
 
 const setActiveLink = (link) => {
   activeLink.value = link;
 };
 
 const handleSearch = () => {
-  console.log('搜索内容:', searchQuery.value);
-  // 在这里添加搜索逻辑
   router.push({
     name: 'searchBook',
-    query:{query:searchQuery.value}
-  })
-
+    query: { query: searchQuery.value }
+  });
 };
+
+// 获取用户信息
+const userInfo = computed(() => store.getters.getUserInfo); // 或 store.state.userInfo
+const defaultAvatar = 'https://tse1-mm.cn.bing.net/th/id/OIP-C.g5M-iZUiocFCi9YAzojtRAAAAA?cb=iwp2&rs=1&pid=ImgDetMain';
 </script>
 
 <style scoped>
+/* ...已有样式... */
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.navbar-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.navbar-username {
+  color: #409eff;
+  font-weight: bold;
+  margin-left: 4px;
+}
+
 .bilibili-navbar {
   /* position: fixed; */
   top: 0;

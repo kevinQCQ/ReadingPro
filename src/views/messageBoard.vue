@@ -1,6 +1,7 @@
 <template>
   <div class="message-board">
     <h1 class="title">留言榜</h1>
+    <h2 class="about-box">这是一个在线阅读交流的平台，欢迎大家来分享您的感受和想法，如果你有什么想法请联系1061024153@qq.com</h2>
 
     <!-- 留言输入框 -->
     <div class="message-input">
@@ -321,6 +322,19 @@ async function addReply(id) {
   
 <style scoped>
 
+.about-box {
+  font-size: 13px;
+  font-weight: normal;
+  color: #666;
+  text-align: center;
+  margin: 20px 0;
+  line-height: 1.6;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
 .top-message {
   background-color: #f0f8ff; /* 浅蓝色背景，突出显示 */
   border: 2px solid #409eff; /* 蓝色边框 */
@@ -357,7 +371,7 @@ async function addReply(id) {
 }
 
 .textarea {
-  width: 90%;
+  width: 97%;
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ddd;
