@@ -142,6 +142,17 @@ const handleSearch = () => {
   overflow-wrap: break-word; /* 支持换行 */
 }
 
+
+.z-library-app,
+.main-content{
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+/* 书籍网格自适应 */
+
+
 .category-item:hover {
   background-color: #409eff;
   color: white;
@@ -183,7 +194,8 @@ const handleSearch = () => {
 /* 最受欢迎书籍 */
 .popular-books {
   margin-top: 10px;
-  width: 100%;
+  width: 80%;
+  overflow-x: auto ;
   margin: 0 auto;
 }
 
@@ -197,19 +209,23 @@ const handleSearch = () => {
   color: #0066cc;
   font-size: 18px;
   font-weight: normal;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
-.books-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
+@media (max-width: 600px) {
+  .section-header {
+    font-size: 16px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    padding: 0 4vw;
+  }
+  .main-content {
+    padding: 0 2vw;
+  }
 }
 
-.books-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
-  width: 1000px;
-  margin: 0 auto;
-}
+
 </style>

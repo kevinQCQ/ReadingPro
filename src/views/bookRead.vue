@@ -11,18 +11,18 @@
           <div v-if="isLoading" class="loading-spinner"></div>
           <div v-if="isLoading" class="loading-text">加载中...</div>
           <div v-if="!isLoading" class="content-title">
-              <h2 class="chapter-title">第{{ my_chapter_id }}板</h2>
+              <h2 class="chapter-title">第{{ my_chapter_id }}章</h2>
           </div>
           <div>
               <h3>{{ content_arr[my_chapter_id] }}</h3>
           </div>
         </div>
       </div>
-      <!-- 添加按钮组 -->
+      <!-- 添加按钮 -->
       <div class="button-group">
-        <button v-if="my_chapter_id!=0" @click="getPrevChapterPath" class="chapter-button">上一板</button>  
+        <button v-if="my_chapter_id!=0" @click="getPrevChapterPath" class="chapter-button">上一章</button>  
         <!-- <button :to="`/books/catalog/${bookId}`" class="chapter-button">返回目录</button> -->
-        <button v-if="my_chapter_id!=content_arr.length-1" @click="getNextChapterPath()" class="chapter-button">下一板</button>
+        <button v-if="my_chapter_id!=content_arr.length-1" @click="getNextChapterPath()" class="chapter-button">下一章</button>
       </div>
       <RouterLink to="/books/1" class="back-button">返回书籍详情</RouterLink>
     </div>
@@ -52,7 +52,7 @@ const my_fileName=ref(route.query.fileName) // 获取文件名
 const store = useStore(); // 获取 Vuex store 实例
 
 const real_title=ref(route.query.book_title)  
-const isLoading = ref(false); // 用于控制加载状态
+const isLoading = ref(false); // 用于控制加载状�?
 
 
 onMounted(async() => {
@@ -99,7 +99,7 @@ async function get_Novel_Chapter()
         fileName:my_fileName.value
     };
     
-    await axios.get(store.getters.getUrl()+'/epub/getChapterFromEpub',{params:{fileName:my_fileName.value}}).then(
+    await axios.get(store.getters.getUrl+'/epub/getChapterFromEpub',{params:{fileName:my_fileName.value}}).then(
         (res) => {
             for(let i=0;i<res.data.data.length;i++)
             {
@@ -155,7 +155,7 @@ const getNextChapterPath = async () => {
   text-align: center;
   font-size: 16px;
   color: #409eff; /* 蓝色 */
-  margin-top: 10px; /* 上边距 */
+  margin-top: 10px; /* 上边�? */
 }
 
 .chapter-title
@@ -163,7 +163,7 @@ const getNextChapterPath = async () => {
   text-align: center;
   font-size: 20px;
   font-weight: bold;
-  margin-top: 20px; /* 上边距 */
+  margin-top: 20px; /* 上边�? */
 }
 
 .title-container {
@@ -179,12 +179,12 @@ const getNextChapterPath = async () => {
 }
 
 .book-content h3 {
-  font-family: "Microsoft YaHei", Arial, sans-serif; /* 使用易读的字体 */
+  font-family: "Microsoft YaHei", Arial, sans-serif; /* 使用易读的字�? */
   font-size: 18px; /* 字体大小 */
   line-height: 1.8; /* 行高，增加阅读舒适度 */
   color: #333; /* 深灰色，减少视觉疲劳 */
-  text-align: justify; /* 两端对齐，提升排版效果 */
-  margin-bottom: 16px; /* 每段之间的间距 */
+  text-align: justify; /* 两端对齐，提升排版效�? */
+  margin-bottom: 16px; /* 每段之间的间�? */
 }
 
 .book-content {
@@ -193,16 +193,16 @@ const getNextChapterPath = async () => {
   line-height: 1.8; /* 默认行高 */
   color: #333; /* 默认字体颜色 */
   background-color: #fdfdfd; /* 背景颜色，柔和的白色 */
-  padding: 20px; /* 内边距 */
+  padding: 20px; /* 内边�? */
   border-radius: 8px; /* 圆角 */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加轻微阴影 */
 }
 
-/* 新增按钮组样式 */
+/* 新增按钮组样�? */
 .button-group {
   display: flex;
   justify-content: center;
-  gap: 10px; /* 按钮之间的间距 */
+  gap: 10px; /* 按钮之间的间�? */
   margin-top: 20px;
 }
 
@@ -216,7 +216,7 @@ const getNextChapterPath = async () => {
   border-radius: 8px; /* 圆角 */
   font-size: 16px; /* 字体大小 */
   font-weight: bold; /* 字体加粗 */
-  cursor: pointer; /* 鼠标悬停时显示手型 */
+  cursor: pointer; /* 鼠标悬停时显示手�? */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 添加阴影 */
   transition: all 0.3s ease; /* 添加过渡效果 */
 }
@@ -230,7 +230,7 @@ const getNextChapterPath = async () => {
 .chapter-button:active {
   background-color: #1e5fa4; /* 点击时的背景颜色 */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 点击时的阴影 */
-  transform: translateY(0); /* 点击时恢复位置 */
+  transform: translateY(0); /* 点击时恢复位�? */
 }
 
 

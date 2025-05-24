@@ -4,7 +4,7 @@ import createPersistedState from 'vuex-persistedstate';
 
 export default createStore({
     state:{
-        url: "http://localhost:8088",
+        url: "http://121.40.60.94:8088",
         user:null,
         userInfo:null,
     },

@@ -12,7 +12,7 @@
        chapter_id: '1'
        }}" class="actionButton">开始阅读</RouterLink>
     <button class="actionButton">加入书架</button>
-    <button class="actionButton">添加到我的图书馆</button>
+    <button class="actionButton">添入图书馆</button>
     <button class="actionButton">下载 EPUB{{ bookFileSize }}</button>
     <button class="actionButton">目录</button>
   </div>
@@ -106,23 +106,42 @@ watch(
   display: flex;
   gap: 10px;
   margin-top: 20px;
-  width: 100%; /* 使按钮栏宽度与信息栏一致 */
-  justify-content: center; /* 水平居中按钮 */
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap; /* 小屏时自动换行 */
 }
+
 .actionButton {
-  width: 14%;
-  padding: 15px 10px;
+  min-width: 90px;         /* 统一最小宽度 */
+  padding: 10px 0;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 100px;
   cursor: pointer;
-  text-decoration: none; /* 移除链接下划线 */
-  display: inline-block; /* 确保 RouterLink 和 button 一致 */
+  text-decoration: none;
+  display: inline-block;
   text-align: center;
+  font-size: 16px;
+  transition: background 0.3s;
+  margin-bottom: 8px;
+  box-sizing: border-box;
 }
+
 .actionButton:hover {
   background-color: #0056b3;
+}
+
+@media (max-width: 600px) {
+  .bookActions {
+    gap: 6px;
+  }
+  .actionButton {
+    min-width: 70px;
+    font-size: 13px;
+    padding: 8px 0;
+    border-radius: 60px;
+  }
 }
 .section-header {
   display: flex;

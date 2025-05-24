@@ -75,7 +75,8 @@ function handleClick() {
   transition: transform 0.3s;
   display: inline-block; /* 让卡片并排显示 */
   /* margin: 10px; */
-  width: 150px; /* 计算每个卡片的宽度 */
+  width: 130px; /* 计算每个卡片的宽度 */
+  height: 200px; /* 统一的高度 */
   vertical-align: top; /* 对齐顶部 */
   background-color: #fff;
   border-radius: 8px;

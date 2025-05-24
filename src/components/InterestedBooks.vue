@@ -89,9 +89,38 @@ async function loadBooks() {
 
 <style scoped>
 
+
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  /* gap: 15px; */
+  width: 100%;      /* 让网格宽度自适应父容器 */
+  margin: 0 auto;
+  box-sizing: border-box;
+  justify-items: center; /* 让网格居中 */
+}
+
+@media (max-width: 1200px) {
+  .books-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 800px) {
+  .books-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+@media (max-width: 100px) {
+  .books-grid {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
+
 .interested-books {
   margin-top: 40px;
-  width: 1000px;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -109,11 +138,7 @@ async function loadBooks() {
   margin-left: 5px;
 }
 
-.books-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 20px;
-}
+
 
 .load-more-container {
   display: flex;

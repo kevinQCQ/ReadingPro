@@ -74,20 +74,27 @@ onMounted(() => {
   width: 100%;
   max-width: 1200px;
   margin: 20px auto; /* 水平居中，减少外边距 */
-  gap: 20px; /* 减少封面和详细信息之间的间距 */
+  gap: 8px; /* 减少封面和详细信息之间的间距 */
   font-family: "Microsoft YaHei", Arial, sans-serif;
   background-color: #f9f9f9;
-  padding: 20px;
+  padding: 3px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .bookCover img {
-  width: 300px;
-  height: 400px;
+  width: 100%;
+  max-width: 200px; /* 限制封面图的最大宽度 */
+  height: auto;
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bookCover {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 200px;
 }
 
 .bookDetails {
@@ -145,4 +152,7 @@ onMounted(() => {
 .attributeValue {
   color: #666;
 }
+
+
+
 </style>
